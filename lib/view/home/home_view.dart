@@ -1,4 +1,6 @@
 import 'package:english_bhashi_todo_ms/utils/constanst.dart';
+import 'package:english_bhashi_todo_ms/view/home/components/home_app_bar.dart';
+import 'package:english_bhashi_todo_ms/view/home/components/slider_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:english_bhashi_todo_ms/extensions/space_exs.dart';
@@ -7,6 +9,7 @@ import 'package:english_bhashi_todo_ms/utils/app_str.dart';
 import 'components/fab.dart';
 import 'widgets/task_widget.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -16,6 +19,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  GlobalKey<SliderDrawerState> drawerKey = GlobalKey<SliderDrawerState>();
   final List<int> testing = [];
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,17 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: const Fab(),
 
       /// Body
-      body: _buildHomeBody(textTheme),
+      body: SliderDrawer(
+        key: drawerKey,
+        isDraggable: false,
+        animationDuration: 1000,
+
+        slider: CustomDrawer(),
+
+        appBar: HomeAppBar(drawerKey: drawerKey,),
+
+        child: _buildHomeBody(textTheme),
+      )
     );
   }
 
