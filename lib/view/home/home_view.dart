@@ -1,10 +1,12 @@
-import 'dart:developer';
+import 'package:english_bhashi_todo_ms/utils/constanst.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:english_bhashi_todo_ms/extensions/space_exs.dart';
 import 'package:english_bhashi_todo_ms/utils/app_colors.dart';
 import 'package:english_bhashi_todo_ms/utils/app_str.dart';
-import 'widgets/fab.dart';
+import 'components/fab.dart';
+import 'widgets/task_widget.dart';
+import 'package:animate_do/animate_do.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,6 +16,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final List<int> testing = [];
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -25,112 +28,123 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: const Fab(),
 
       /// Body
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          children: [
-            /// Custom App Bar
-            Container(
-              margin: const EdgeInsets.only(top: 60),
-              width: double.infinity,
-              height: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                  /// Progress Indicator
-                  const SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: CircularProgressIndicator(
-                      value: 1 / 3,
-                      backgroundColor: Colors.grey,
-                      valueColor: AlwaysStoppedAnimation(
-                        AppColors.primaryColor,
-                      ),
-                    ),
-                  ),
-                  
-                  25.w,
-                  /// Top Level Task info
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppStr.mainTitle,
-                        style: textTheme.displayLarge,
-                      ),
-                      3.h,
-                      Text("1 of 3 task", style: textTheme.titleMedium,)
-                    ],
-                  )
-                ],
-              ),
-            ),
-
-            /// Divider
-            const Padding(padding: EdgeInsets.only(top: 10),
-            child: Divider(
-              thickness: 2,
-              indent: 100,
-            ),
-            ),
-
-            /// Tasks
-            SizedBox(
-              width: double.infinity,
-              height: 600,
-              child: ListView.builder(
-                itemCount: 20,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return AnimatedContainer(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow( color: Colors.black.withOpacity(.1),
-                          offset: const Offset(0, 4),
-                          blurRadius: 10
-                          ),
-                        ]
-                      ),
-                      duration: const Duration(microseconds: 600),
-                      child: ListTile(
-
-                        /// Check Icon
-                        leading: GestureDetector(
-                          onTap: () {
-                            /// check or uncheck the task
-                            
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 600),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.grey, width: .8),
-                            ),
-                            child: const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                }),  
-              ),
-            ],
-          ),
-        ),
+      body: _buildHomeBody(textTheme),
     );
   }
+
+  // Home Body
+  Widget _buildHomeBody(TextTheme textTheme) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        children: [
+          /// Custom App Bar
+          Container(
+            margin: const EdgeInsets.only(top: 60),
+            width: double.infinity,
+            height: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                
+                /// Progress Indicator
+                const SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(
+                    value: 1 / 3,
+                    backgroundColor: Colors.grey,
+                    valueColor: AlwaysStoppedAnimation(
+                      AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+                
+                25.w,
+                /// Top Level Task info
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppStr.mainTitle,
+                      style: textTheme.displayLarge,
+                    ),
+                    3.h,
+                    Text("1 of 3 task", style: textTheme.titleMedium,)
+                  ],
+                )
+              ],
+            ),
+          ),
+    
+          /// Divider
+          const Padding(padding: EdgeInsets.only(top: 10),
+          child: Divider(
+            thickness: 2,
+            indent: 100,
+          ),
+          ),
+    
+          /// Tasks
+          SizedBox(
+            width: double.infinity,
+            height: 600,
+            child: testing.isNotEmpty 
+            ///Task List is not empty
+            ? ListView.builder(
+              itemCount: testing.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                  direction: DismissDirection.horizontal,
+                  onDismissed: (_) {
+                    /// we will remove currect task from DB
+                  },
+                  background: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.delete_outline,
+                        color: Colors.grey,
+                      ),
+                      8.w,
+                      const Text(AppStr.deletedTask,style: TextStyle(color: Colors.grey,),)
+    
+                    ],
+                  ),
+                  key: Key(
+                    index.toString(),
+                  ),
+                  child: const TaskWidget()
+                );
+              })
+            /// Task list is empty
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ///Lottie Anime
+                  FadeIn(
+                    child: SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Lottie.asset(lottieURL, animate: testing.isNotEmpty ? false : true,),),),
+                      
+                      // Sub Text
+                      FadeInUp(
+                        from: 30,
+                        child: const Text(AppStr.doneAllTask,),
+                      ),
+                ],
+              ) 
+            ),
+          ],
+        ),
+      );
+  }
 }
+
 /*
 // ignore_for_file: must_be_immutable
 

@@ -1,3 +1,4 @@
+String lottieURL = 'assets/lottie/1.json';
 /*
 import 'package:flutter/material.dart';
 import 'package:ftoast/ftoast.dart';
