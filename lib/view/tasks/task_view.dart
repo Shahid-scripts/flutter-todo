@@ -1,3 +1,306 @@
+import 'package:flutter/material.dart';
+import 'package:english_bhashi_todo_ms/extensions/space_exs.dart';
+import 'package:english_bhashi_todo_ms/utils/app_str.dart';
+import 'package:english_bhashi_todo_ms/view/tasks/widget/task_view_app_bar.dart';
+
+import 'components/rep_textfield.dart';
+
+class TaskView extends StatefulWidget {
+  const TaskView({super.key});
+
+  @override
+  State<TaskView> createState() => _TaskViewState();
+}
+
+class _TaskViewState extends State<TaskView> {
+  final TextEditingController titleTaskController = TextEditingController();
+  final TextEditingController descriptionTaskController = TextEditingController();
+
+  TimeOfDay? selectedTime;
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: const TaskViewAppBar(),
+        body: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildTopSideTexts(textTheme),
+                SizedBox(
+                  width: double.infinity,
+                  height: 530,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Text(
+                          AppStr.titleOfTitleTextField,
+                          style: textTheme.headlineMedium,
+                        ),
+                      ),
+                      RepTextField(controller: titleTaskController),
+                      10.h,
+                      RepTextField(
+                        controller: descriptionTaskController,
+                        isForDescription: true,
+                      ),
+                      GestureDetector(
+                        onTap: () => _selectTime(context),
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(20),
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(
+                                  AppStr.timeString,
+                                  style: textTheme.headlineSmall,
+                                ),
+                              ),
+                              Container(
+                                width: 80,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.shade100,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    selectedTime != null
+                                        ? selectedTime!.format(context)
+                                        : "Time",
+                                    style: textTheme.titleSmall,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopSideTexts(TextTheme textTheme) {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              text: AppStr.addNewTask,
+              style: textTheme.titleLarge,
+              children: const [
+                TextSpan(
+                  text: AppStr.taskStrnig,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+/*
+import 'package:english_bhashi_todo_ms/extensions/space_exs.dart';
+import 'package:english_bhashi_todo_ms/utils/app_str.dart';
+import 'package:english_bhashi_todo_ms/view/tasks/widget/task_view_app_bar.dart';
+import 'package:flutter/material.dart';
+
+import 'components/rep_textfield.dart';
+
+class TaskView extends StatefulWidget {
+  const TaskView({super.key});
+
+  @override
+  State<TaskView> createState() => _TaskViewState();
+}
+
+class _TaskViewState extends State<TaskView> {
+  final TextEditingController titleTaskController = TextEditingController();
+  final TextEditingController descriptionTaskController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+      child: Scaffold(
+        appBar: const TaskViewAppBar(),
+      
+        body: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildTopSideTexts(textTheme),
+            
+                SizedBox(
+                  width: double.infinity,
+                  height: 530,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(padding: const EdgeInsets.only(left: 30),
+                      child: Text(AppStr.titleOfTitleTextField, style: textTheme.headlineMedium,),
+                      ),
+            
+                      RepTextField(controller: titleTaskController),
+
+                      10.h,
+
+                      RepTextField(controller: descriptionTaskController, isForDescription: true,),
+
+                      GestureDetector(
+                        onTap: () {
+                          showModelBottomSheet(
+                            context: context, 
+                            builder: (_) => SizedBox(
+                              height: 280,
+                              child: TimePickerWidget(
+                                onChange: (_, _) {},
+                                dateFormate: 'HH:mm',
+                                onConfirm: (dateTime, _) {},
+                              ),
+                            ));
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(20),
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300,),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(AppStr.timeString, style: textTheme.headlineSmall,),
+                              ),
+                              Container(
+                                width: 80,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.shade100
+                                ),
+                                child: Center(
+                                  child: Text("Time", style: textTheme.titleSmall,),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildTopSideTexts(TextTheme textTheme) {
+    return SizedBox(
+      width: double.infinity,
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
+          ),
+          RichText(text: TextSpan(
+            text: AppStr.addNewTask,
+            style: textTheme.titleLarge,
+            children: const [
+              TextSpan(text: AppStr.taskStrnig, style: TextStyle(fontWeight: FontWeight.w400,),)
+            ]
+            )),
+          const SizedBox(
+            width: 70,
+            child: Divider(
+              thickness: 2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+*/
+
+
+
 /*
 // ignore_for_file: prefer_typing_uninitialized_variables
 

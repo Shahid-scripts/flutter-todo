@@ -1,4 +1,5 @@
 import 'package:english_bhashi_todo_ms/view/home/home_view.dart';
+import 'package:english_bhashi_todo_ms/view/tasks/task_view.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const HomeView(),
+      //home: const TaskView(),
     );
   }
 }
