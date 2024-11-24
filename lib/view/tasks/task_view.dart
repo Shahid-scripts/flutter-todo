@@ -1,3 +1,4 @@
+import 'package:english_bhashi_todo_ms/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:english_bhashi_todo_ms/extensions/space_exs.dart';
 import 'package:english_bhashi_todo_ms/utils/app_str.dart';
@@ -44,71 +45,11 @@ class _TaskViewState extends State<TaskView> {
             child: Column(
               children: [
                 _buildTopSideTexts(textTheme),
-                SizedBox(
-                  width: double.infinity,
-                  height: 530,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Text(
-                          AppStr.titleOfTitleTextField,
-                          style: textTheme.headlineMedium,
-                        ),
-                      ),
-                      RepTextField(controller: titleTaskController),
-                      10.h,
-                      RepTextField(
-                        controller: descriptionTaskController,
-                        isForDescription: true,
-                      ),
-                      GestureDetector(
-                        onTap: () => _selectTime(context),
-                        child: Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.all(20),
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  AppStr.timeString,
-                                  style: textTheme.headlineSmall,
-                                ),
-                              ),
-                              Container(
-                                width: 80,
-                                height: 35,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey.shade100,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    selectedTime != null
-                                        ? selectedTime!.format(context)
-                                        : "Time",
-                                    style: textTheme.titleSmall,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+                _buildMainTeskViewActivity(textTheme, context),
+
+                /// Bottom side Buttons
+                _buildBottomSideButtons()
               ],
             ),
           ),
@@ -116,7 +57,163 @@ class _TaskViewState extends State<TaskView> {
       ),
     );
   }
+  Widget _buildBottomSideButtons() {
+    return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      /// Delete Current Task Button
+                      MaterialButton(
+                        onPressed: () {},
+                        minWidth: 150,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        height: 55,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.close, color: AppColors.primaryColor,),
+                            5.w,
+                            const Text(AppStr.deleteTask, style: TextStyle(color: AppColors.primaryColor),),
+                          ],
+                        ),
+                      ),
+                        /// Add or Update Task
+                      MaterialButton(
+                        onPressed: () {},
+                        minWidth: 150,
+                        color: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        height: 55,
+                        child: const Text(AppStr.deleteTask, style: TextStyle(color: Colors.white),),
+                      ),
+                    
+                    ],
+                  ),
+                );
+              
+  }
 
+  /// MAin Task View Activity
+  Widget _buildMainTeskViewActivity(TextTheme textTheme, BuildContext context) {
+    return SizedBox(
+                width: double.infinity,
+                height: 530,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Title of TextField
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30),
+                      child: Text(AppStr.titleOfTitleTextField,
+                        style: textTheme.headlineMedium,),
+                    ),
+                    /// Task Title
+                    RepTextField(controller: titleTaskController),
+                    10.h,
+                    /// Task Title
+                    RepTextField(
+                      controller: descriptionTaskController,
+                      isForDescription: true,
+                    ),
+                    /// Time Selection
+                    GestureDetector(
+                      onTap: () => _selectTime(context),
+                      child: Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(20),
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                AppStr.timeString,
+                                style: textTheme.headlineSmall,
+                              ),
+                            ),
+                            Container(
+                              width: 80,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.shade100,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  selectedTime != null
+                                      ? selectedTime!.format(context)
+                                      : "Time",
+                                  style: textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    /// Date Selection
+                    GestureDetector(
+                      onTap: () => _selectTime(context),
+                      child: Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(20),
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                AppStr.timeString,
+                                style: textTheme.headlineSmall,
+                              ),
+                            ),
+                            Container(
+                              width: 80,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.shade100,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  selectedTime != null
+                                      ? selectedTime!.format(context)
+                                      : "Time",
+                                  style: textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  
+                  ],
+                ),
+              );
+  }
+  /// Top Side Texts
   Widget _buildTopSideTexts(TextTheme textTheme) {
     return SizedBox(
       width: double.infinity,
@@ -155,6 +252,7 @@ class _TaskViewState extends State<TaskView> {
       ),
     );
   }
+
 }
 
 
@@ -300,8 +398,8 @@ class _TaskViewState extends State<TaskView> {
 */
 
 
-
 /*
+
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';

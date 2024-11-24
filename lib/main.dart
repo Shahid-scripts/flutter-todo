@@ -1,9 +1,53 @@
-import 'package:english_bhashi_todo_ms/view/home/home_view.dart';
-import 'package:english_bhashi_todo_ms/view/tasks/task_view.dart';
+import 'package:english_bhashi_todo_ms/data/hive_data_store.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:english_bhashi_todo_ms/models/task.dart';
+import 'package:english_bhashi_todo_ms/view/home/home_view.dart';
 Future<void> main() async {
-  runApp(const MyApp());
+  /// Init Hive DB before runAPP
+  await Hive.initFlutter();
+
+  /// Registor Hive Adapter
+  Hive.registerAdapter<Task>(TaskAdapter());
+
+  /// Open a Box
+  var box = await Hive.openBox<Task>(HiveDataStore.boxName);
+
+  /// This is step is not necessary
+  /// Delete data from previous day
+  box.values.forEach(
+    (task) {
+      if (task.createdAtTime.day !=DateTime.now().day) {
+        task.delete();
+      } else {
+        /// Do nothing
+      }
+    }
+  );
+
+  runApp(BaseWidget(child: const MyApp()));
+}
+
+/// The inherited widget provides us with a convenient way to pass data between widgets.
+/// While developing an app you will need some data from your parent's widgets or grant paarent widgetss or maybe beyond that.
+class BaseWidget extends InheritedWidget {
+  BaseWidget({Key? key, required this.child}) : super(key: key, child: child);
+  final HiveDataStore dataStore = HiveDataStore();
+  final Widget child;
+
+  static BaseWidget of(BuildContext context) {
+    final base = context.dependOnInheritedWidgetOfExactType<BaseWidget>();
+    if (base != null) {
+      return base;
+    } else {
+      throw StateError('Could not find ancestor widget of type BaseWidger');
+    }
+  }
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
+  }
 }
 
 class MyApp extends StatelessWidget {

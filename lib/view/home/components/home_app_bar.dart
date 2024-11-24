@@ -1,3 +1,4 @@
+import 'package:english_bhashi_todo_ms/utils/constanst.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -59,7 +60,9 @@ class _HomeAppBarState extends State<HomeAppBar> with SingleTickerProviderStateM
             ),
             Padding(
               padding: const EdgeInsets.only(right: 20),
-              child: IconButton(onPressed: (){}, icon: const Icon(CupertinoIcons.trash_fill, size: 40,)),
+              child: IconButton(onPressed: (){
+                noTaskWarning(context);
+              }, icon: const Icon(CupertinoIcons.trash_fill, size: 40,)),
             )
           ],
         ),

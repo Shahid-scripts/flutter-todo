@@ -1,3 +1,4 @@
+// flutter pub run build_runner build --delete-conflicting-outputs
 import 'package:uuid/uuid.dart';
 import 'package:hive/hive.dart';
 

@@ -1,3 +1,40 @@
+import 'package:english_bhashi_todo_ms/models/task.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+/// All the [CRUD] operation method For Hive DB
+class HiveDataStore {
+  /// Box Name - String
+  static const boxName = 'taskBox';
+
+  /// Our current Box with all the saved data inside - Box <Task>
+  final Box<Task> box = Hive.box<Task>(boxName);
+
+  /// Add New task to box
+  Future<void> addTask({required Task task}) async {
+    return box.put(task.id, task);
+  }
+
+  /// Show task
+  Future<Task?> getTask({required String id}) async {
+    return box.get(id);
+  }
+
+  /// Update TAsk
+  Future<void> updateTask({required Task task}) async {
+    await task.save();
+  }
+
+  /// Delete Task
+  Future<void> deleteTask({required Task task}) async {
+    await task.delete();
+  }
+
+  /// Listen to box changes
+  /// using this method we will listen to box chnages and update the UI accordingly
+  ValueListenable<Box<Task>> listenToTask() => box.listenable();
+}
+
 /*
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
